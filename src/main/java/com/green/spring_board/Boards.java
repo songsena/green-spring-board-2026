@@ -1,9 +1,17 @@
 package com.green.spring_board;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Entity
 @Table(name = "boards")
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
 
 public class Boards {
     @Id
@@ -16,35 +24,7 @@ public class Boards {
     @Column(nullable = false)
     private String content;
 
-    public Boards() {}
+    @Column(nullable = false)
+    private int hits;
 
-    public Boards(int id, String title, String content) {
-        this.id = id;
-        this.title = title;
-        this.content = content;
-    }
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
-    public String getContent() {
-        return content;
-    }
-
-    public void setContent(String content) {
-        this.content = content;
-    }
 }
