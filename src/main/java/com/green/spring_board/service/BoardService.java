@@ -5,7 +5,6 @@ import com.green.spring_board.dto.BoardUpdateRequest;
 import com.green.spring_board.entity.User;
 import com.green.spring_board.exceptions.ResourceNotFoundException;
 import com.green.spring_board.exceptions.UnauthenticatedException;
-import com.green.spring_board.exceptions.UserRequestException;
 import com.green.spring_board.dto.BoardCreateRequest;
 import com.green.spring_board.entity.Board;
 import com.green.spring_board.repository.BoardRepository;
@@ -79,14 +78,6 @@ public class BoardService {
 
     // 삽입
     public int createBoard(BoardCreateRequest boardCreateRequest, Integer userId) {
-        if (boardCreateRequest.getTitle() == null || boardCreateRequest.getTitle().isBlank()) {
-            // 사용자가 값을 잘못 입력한 경우
-            throw new UserRequestException("잘못된 입력값 입니다.");
-        }
-        if (boardCreateRequest.getContent() == null || boardCreateRequest.getContent().isBlank()) {
-            // 사용자가 값을 잘못 입력한 경우
-            throw new UserRequestException("잘못된 입력값 입니다.");
-        }
 
         // userId 유효성 체크(해당 userId의 유저가 정상적으로 존재하는지)
         // TODO :: 이후 삭제/탈퇴 유저에 대한 검증도 추가 필요
