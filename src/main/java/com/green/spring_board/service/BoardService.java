@@ -1,6 +1,7 @@
 package com.green.spring_board.service;
 
 import com.green.spring_board.dto.BoardResponse;
+import com.green.spring_board.dto.BoardUpdateRequest;
 import com.green.spring_board.entity.User;
 import com.green.spring_board.exceptions.ResourceNotFoundException;
 import com.green.spring_board.exceptions.UnauthenticatedException;
@@ -105,7 +106,7 @@ public class BoardService {
     }
 
     // 수정
-    public void updateBoard(int id, BoardCreateRequest boardCreateRequest) {
+    public void updateBoard(int id, BoardUpdateRequest boardCreateRequest) {
         Optional<Board> optionalBoards = boardRepository.findById(id);
         if(optionalBoards.isEmpty()) {
             // 게시글을 못 찾은 경우
