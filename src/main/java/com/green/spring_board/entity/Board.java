@@ -36,6 +36,12 @@ public class Board {
     @Column(nullable = false, insertable = false, updatable = false)
     private LocalDateTime updatedDatetime;
 
+    // user(userId) -> profile(user_id)
+    // 1:1 @OneToOne
+    // board <-> user
+    // n:1 , 1:n @OneToMany
+    // n:m @ManyToMany
+    // ManyToOne 기본값은 EAGER / FATCH는 명시해줘야됨.
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private User user;
