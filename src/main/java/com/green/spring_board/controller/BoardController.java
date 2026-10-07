@@ -63,11 +63,10 @@ public class BoardController {
         // 기존 세션이 없으면 새로 만들지 말라는 옵션 (회원전용 기능)
         HttpSession session = request.getSession(false);
 
-        int userId = -1;
-        if (session != null && session.getAttribute("userId") != null) {
-//            throw new UnauthenticatedException("로그인이 필요합니다.");
-            userId = (int) session.getAttribute("userId");
+        if (session == null || session.getAttribute("userId") == null) {
+            throw new UnauthenticatedException("로그인이 필요합니다.");
         }
+        int userId = (int) session.getAttribute("userId");
 
         List<BoardResponse> boards = boardService.getMyBoards(userId);
 

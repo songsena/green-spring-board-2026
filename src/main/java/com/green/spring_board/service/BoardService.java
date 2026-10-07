@@ -99,7 +99,7 @@ public class BoardService {
                     board.getContent(),
                     board.getHits(),
                     board.getLikeCount(),
-                    (userId == -1) ? false : likeRepository.existsByUserIdAndBoardId(userId, board.getId()),
+                    likeRepository.existsByUserIdAndBoardId(userId, board.getId()),
                     board.getUser().getId(),
                     board.getUser().getNickname(),
                     board.getCreatedDatetime(),
@@ -217,6 +217,4 @@ public class BoardService {
         // 3. 끝
         return likeDetailResponse;
     }
-
-    // 내가 이 게시글 좋아요 눌렀는지 유무
 }

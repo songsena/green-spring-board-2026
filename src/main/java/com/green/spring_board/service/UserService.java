@@ -91,10 +91,6 @@ public class UserService {
 
         User user = userOptional.get();
 
-        if (user.getId() != userId) {
-            throw new AuthorizationFailureException("본인의 정보만 수정 가능합니다.");
-        }
-
         // 이메일이 사용 중인지 확인
         if (userRepository.existsByEmail(myInfoResponse.getEmail())) {
             throw new ResourceConflictException("이미 존재하는 이메일입니다.");
@@ -116,10 +112,6 @@ public class UserService {
             throw new ResourceNotFoundException("회원정보를 찾을 수 없습니다.");
         }
         User user = userOptional.get();
-
-        if (user.getId() != userId) {
-            throw new AuthorizationFailureException("본인의 정보만 수정 가능합니다.");
-        }
 
         userRepository.delete(user);
     }
