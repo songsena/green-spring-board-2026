@@ -5,6 +5,7 @@ import com.green.spring_board.dto.MyInfoResponse;
 import com.green.spring_board.dto.SignupRequest;
 import com.green.spring_board.dto.UserUpdateRequest;
 import com.green.spring_board.entity.User;
+import com.green.spring_board.exceptions.AuthorizationFailureException;
 import com.green.spring_board.exceptions.ResourceConflictException;
 import com.green.spring_board.exceptions.ResourceNotFoundException;
 import com.green.spring_board.exceptions.UnauthenticatedException;
@@ -26,7 +27,7 @@ public class UserService {
 
         // 이메일이 사용 중인지 확인
         if (userRepository.existsByEmail(signupRequest.getEmail())) {
-            throw new ResourceConflictException("Email already exists");
+            throw new ResourceConflictException("이미 존재하는 이메일입니다.");
         }
 
         // 비밀번호 해싱
@@ -44,7 +45,7 @@ public class UserService {
         // 1. 이메일이 존재하는건지 확인
         Optional<User> userOptional = userRepository.findByEmail(loginRequest.getEmail());
         if (userOptional.isEmpty()) {
-            throw new ResourceNotFoundException("User not found");
+            throw new ResourceNotFoundException("회원정보를 찾을 수 없습니다.");
         }
 
         User user = userOptional.get(); // 이 이메일의 사용자 정보
@@ -54,7 +55,7 @@ public class UserService {
 //        user.getPassword() // DB에 저장된 비밀번호
 
         if (!passwordEncoder.matches(loginRequest.getPassword(), user.getPassword())) {
-            throw new UnauthenticatedException("Wrong password");
+            throw new UnauthenticatedException("비밀번호가 올바르지 않습니다.");
         }
 
         // 3. 로그인 성공 -> 컨트롤러
@@ -64,7 +65,7 @@ public class UserService {
     public MyInfoResponse getUserInfo(int userId) {
         Optional<User> userOptional = userRepository.findById(userId);
         if (userOptional.isEmpty()) {
-            throw new ResourceNotFoundException("User not found");
+            throw new ResourceNotFoundException("회원정보를 찾을 수 없습니다.");
         }
 
         // 3. 유저 아이디로 DB 조회함
@@ -85,14 +86,18 @@ public class UserService {
     public MyInfoResponse updateUserInfo(int userId, UserUpdateRequest myInfoResponse) {
         Optional<User> userOptional = userRepository.findById(userId);
         if (userOptional.isEmpty()) {
-            throw new ResourceNotFoundException("User not found");
+            throw new ResourceNotFoundException("회원정보를 찾을 수 없습니다.");
         }
 
         User user = userOptional.get();
 
+        if (user.getId() != userId) {
+            throw new AuthorizationFailureException("본인의 정보만 수정 가능합니다.");
+        }
+
         // 이메일이 사용 중인지 확인
         if (userRepository.existsByEmail(myInfoResponse.getEmail())) {
-            throw new ResourceConflictException("Email already exists");
+            throw new ResourceConflictException("이미 존재하는 이메일입니다.");
         }
 
         if (myInfoResponse.getEmail() != null && !myInfoResponse.getEmail().isBlank()) {
@@ -108,9 +113,14 @@ public class UserService {
     public void deleteUser(int userId) {
         Optional<User> userOptional = userRepository.findById(userId);
         if (userOptional.isEmpty()) {
-            throw new ResourceNotFoundException("User not found");
+            throw new ResourceNotFoundException("회원정보를 찾을 수 없습니다.");
         }
         User user = userOptional.get();
+
+        if (user.getId() != userId) {
+            throw new AuthorizationFailureException("본인의 정보만 수정 가능합니다.");
+        }
+
         userRepository.delete(user);
     }
 }
