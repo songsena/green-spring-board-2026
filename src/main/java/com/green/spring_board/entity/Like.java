@@ -28,7 +28,7 @@ public class Like {
     @JoinColumn(name = "board_id", nullable = false)
     private Board board;
 
-    @Column(name = "create_datetime", nullable = false, insertable = false, updatable = false)
+    @Column(nullable = false, insertable = false, updatable = false)
     private LocalDateTime createdDatetime;
 
 }

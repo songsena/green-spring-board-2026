@@ -46,4 +46,7 @@ public class Board {
     @JoinColumn(name = "user_id")
     private User user;
 
+    @Column(nullable = false)
+    private int likeCount;
+
 }

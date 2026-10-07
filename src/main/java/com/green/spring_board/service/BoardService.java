@@ -44,6 +44,7 @@ public class BoardService {
                             board.getTitle(),
                             board.getContent(),
                             board.getHits(),
+                            board.getLikeCount(),
                             board.getUser().getId(),
                             board.getUser().getNickname(),
                             board.getCreatedDatetime(),
@@ -73,6 +74,7 @@ public class BoardService {
                 board.getTitle(),
                 board.getContent(),
                 board.getHits(),
+                board.getLikeCount(),
                 board.getUser().getId(),
                 board.getUser().getNickname(),
                 board.getCreatedDatetime(),
@@ -91,6 +93,7 @@ public class BoardService {
                     board.getTitle(),
                     board.getContent(),
                     board.getHits(),
+                    board.getLikeCount(),
                     board.getUser().getId(),
                     board.getUser().getNickname(),
                     board.getCreatedDatetime(),
@@ -183,9 +186,16 @@ public class BoardService {
             like.setUser(user);
             like.setBoard(board);
             likeRepository.save(like);
+
+            // 이 게시글이 라이크카운트를 1증가시키고 삭제하면 1감소시킴
+            board.setLikeCount(board.getLikeCount() + 1);
+            boardRepository.save(board);
         } else { // 있으면 좋아요 삭제
             Like like = likeOptional.get();
             likeRepository.deleteById(like.getId());
+
+            board.setLikeCount(board.getLikeCount() - 1);
+            boardRepository.save(board);
         }
     }
 }
