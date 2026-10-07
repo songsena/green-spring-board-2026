@@ -1,10 +1,8 @@
 package com.green.spring_board.controller;
 
-import com.green.spring_board.dto.ApiResponse;
-import com.green.spring_board.dto.BoardResponse;
-import com.green.spring_board.dto.BoardUpdateRequest;
+import com.green.spring_board.dto.*;
+import com.green.spring_board.entity.Board;
 import com.green.spring_board.exceptions.UnauthenticatedException;
-import com.green.spring_board.dto.BoardCreateRequest;
 import com.green.spring_board.service.BoardService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
@@ -39,6 +37,23 @@ public class BoardController {
     public ResponseEntity<ApiResponse<BoardResponse>> getBoardsDetail(@PathVariable int id) {
         BoardResponse board = boardService.getBoard(id);
         return ResponseEntity.ok(ApiResponse.ok(board));
+    }
+
+    // 내 게시글 조회
+    @GetMapping("/me")
+    // 게시글이 여러개일수있기 때문에 List로 받아야함
+    public ResponseEntity<ApiResponse<List<BoardResponse>>> getMyBoards(HttpServletRequest request) {
+        // 기존 세션이 없으면 새로 만들지 말라는 옵션 (회원전용 기능)
+        HttpSession session = request.getSession(false);
+
+        if (session == null || session.getAttribute("userId") == null) {
+            throw new UnauthenticatedException("로그인이 필요합니다.");
+        }
+        // 2. 세션에서 유저 아이디 뽑아옴
+        int userId = (int) session.getAttribute("userId");
+        List<BoardResponse> boards = boardService.getMyBoards(userId);
+
+        return ResponseEntity.ok(ApiResponse.ok(boards));
     }
 
     // 삽입

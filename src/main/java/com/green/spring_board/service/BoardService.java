@@ -77,6 +77,27 @@ public class BoardService {
         );
     }
 
+    // 내 게시글 조회
+    public List<BoardResponse> getMyBoards(int userId) {
+        List<Board> boards = boardRepository.findAllByUser_Id(userId);
+        List<BoardResponse> boardResponses = new ArrayList<>();
+
+        for (Board board : boards) {
+            boardResponses.add(new BoardResponse(
+                    board.getId(),
+                    board.getTitle(),
+                    board.getContent(),
+                    board.getHits(),
+                    board.getUser().getId(),
+                    board.getUser().getNickname(),
+                    board.getCreatedDatetime(),
+                    board.getUpdatedDatetime()
+            ));
+        }
+
+        return boardResponses;
+    }
+
     // 삽입
     public int createBoard(BoardCreateRequest boardCreateRequest, Integer userId) {
 

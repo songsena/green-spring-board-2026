@@ -83,22 +83,9 @@ public class UserController {
             throw new UnauthenticatedException("로그인이 필요합니다.");
         }
 
-        if (userUpdateRequest.getEmail() == null || userUpdateRequest.getNickname() == null) {
-            return ResponseEntity.badRequest().build();
-        }
         int userId = (int) session.getAttribute("userId");
-
-        try {
-            userService.updateUserInfo(userId, userUpdateRequest);
-            return ResponseEntity.ok(ApiResponse.ok());
-        } catch (ResourceNotFoundException e) {
-            return ResponseEntity.notFound().build();
-        } catch (Exception e) {
-            e.printStackTrace();
-            return ResponseEntity.internalServerError().build();
-        }
-
-
+        userService.updateUserInfo(userId, userUpdateRequest);
+        return ResponseEntity.ok(ApiResponse.ok());
         }
 
     // 회원 탈퇴
