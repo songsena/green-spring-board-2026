@@ -55,7 +55,7 @@ public class CommentService {
             throw new ResourceNotFoundException("게시글이 존재하지 않습니다.");
         }
 
-        List<Comment> comments = commentRepository.findByBoardId(boardId);
+        List<Comment> comments = commentRepository.findByBoardIdAndIsDeletedFalse(boardId);
         // 댓글은 가져왔는데 이걸 이제 CommentResponse 로 변환
 
         List<CommentResponse> commentResponses = new ArrayList<>();
@@ -75,9 +75,12 @@ public class CommentService {
     public void updateComment (CommentUpdateRequest commentUpdateRequest, int commentId, int userId) {
         Optional<Comment> commentOptional = commentRepository.findById(commentId);
         if (commentOptional.isEmpty()) {
-            throw new ResourceNotFoundException("Comment not found.");
+            throw new ResourceNotFoundException("게시글이 존재하지 않습니다.");
         }
         Comment comment = commentOptional.get();
+
+        if (comment.isDeleted())
+            throw new ResourceNotFoundException("삭제된 댓글입니다.");
 
         if (comment.getUser().getId() != userId) {
             throw new AuthorizationFailureException("수정할 권한이 없습니다.");
@@ -92,7 +95,7 @@ public class CommentService {
     public void deleteComment (int commentId, int userId) {
         Optional<Comment> commentOptional = commentRepository.findById(commentId);
         if (commentOptional.isEmpty()) {
-            throw new ResourceNotFoundException("Comment not found.");
+            throw new ResourceNotFoundException("게시글이 존재하지 않습니다.");
         }
         Comment comment = commentOptional.get();
 
@@ -100,6 +103,7 @@ public class CommentService {
             throw new AuthorizationFailureException("삭제할 권한이 없습니다.");
         }
 
-        commentRepository.delete(comment);
+        comment.setDeleted(true);
+        commentRepository.save(comment);
     }
 }
