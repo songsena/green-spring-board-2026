@@ -8,6 +8,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -25,18 +26,19 @@ public class BoardController {
 
     // 전체 조회
     @GetMapping
-    public ResponseEntity<ApiResponse<List<BoardResponse>>> getBoards(HttpServletRequest request){
-//        return boardRepository.findAll(); <- 데이터만
+    public ResponseEntity<ApiResponse<Page<BoardResponse>>> getBoards(HttpServletRequest request,
+                                                                      @RequestParam(defaultValue = "0") int page,
+                                                                      @RequestParam(defaultValue = "10") int size
+    ){
         HttpSession session = request.getSession(false);
 
         int userId = -1;
         if (session != null && session.getAttribute("userId") != null) {
-//            throw new UnauthenticatedException("로그인이 필요합니다.");
             userId = (int) session.getAttribute("userId");
         }
 
         return ResponseEntity.ok(
-                ApiResponse.ok(boardService.getAllBoards(userId))
+                ApiResponse.ok(boardService.getAllBoards(userId, page, size))
         );
     }
 
@@ -48,7 +50,6 @@ public class BoardController {
 
         int userId = -1;
         if (session != null && session.getAttribute("userId") != null) {
-//            throw new UnauthenticatedException("로그인이 필요합니다.");
             userId = (int) session.getAttribute("userId");
         }
 
