@@ -25,63 +25,38 @@ import java.util.List;
 public class CommentController {
     private final CommentService commentService;
 
-    // 댓글 생성
-    @PostMapping("board/{boardId}/comments")
-    public ResponseEntity<ApiResponse<Void>> createComment
-                                                (@PathVariable int boardId, @Valid
-                                                 @RequestBody CommentCreateRequest commentCreateRequest,
-                                                 HttpServletRequest  httpServletRequest) {
-
-        HttpSession session = httpServletRequest.getSession(false);
-
-        if (session == null || session.getAttribute("userId") == null) {
-            throw new UnauthenticatedException("로그인이 필요합니다.");
-        }
-
-        int userId = (int) session.getAttribute("userId");
-        commentService.createComment(commentCreateRequest, userId, boardId);
-
+    @PostMapping("/board/{id}/comment")
+    public ResponseEntity<ApiResponse<Void>> createComment(
+            @PathVariable int id,
+            @RequestBody CommentCreateRequest commentCreateRequest
+    ){
+        commentService.createComment(commentCreateRequest, id);
         return ResponseEntity.ok(ApiResponse.ok());
     }
 
-    // 댓글 조회
-    @GetMapping("board/{boardId}/comments")
-    public ResponseEntity<ApiResponse<List<CommentResponse>>> readComments(@PathVariable int boardId) {
-        return ResponseEntity.ok(ApiResponse.ok(commentService.readComments(boardId)));
+    @GetMapping("/board/{id}/comment")
+    public ResponseEntity<ApiResponse<List<CommentResponse>>> readComments(
+            @PathVariable int id
+    ){
+        return ResponseEntity.ok(
+                ApiResponse.ok(commentService.readComments(id))
+        );
     }
 
-    // 댓글 수정
     @PatchMapping("/comment/{id}")
-    public ResponseEntity<ApiResponse<Void>> updateComment(@PathVariable int id,
-                                                           @RequestBody CommentUpdateRequest commentUpdateRequest,
-                                                           @Valid HttpServletRequest httpServletRequest) {
-        // 코드 미완성
-        HttpSession session = httpServletRequest.getSession(false);
-
-        if (session == null || session.getAttribute("userId") == null) {
-            throw new UnauthenticatedException("로그인이 필요합니다.");
-        }
-
-        int userId = (int) session.getAttribute("userId");
-        commentService.updateComment(commentUpdateRequest, id, userId);
-
+    public ResponseEntity<ApiResponse<Void>> updateComment(
+            @RequestBody CommentCreateRequest commentCreateRequest,
+            @PathVariable int id
+    ){
+        commentService.updateComment(commentCreateRequest, id);
         return ResponseEntity.ok(ApiResponse.ok());
     }
 
-    // 댓글 삭제
     @DeleteMapping("/comment/{id}")
     public ResponseEntity<ApiResponse<Void>> deleteComment(
-            @PathVariable int id,
-            HttpServletRequest httpServletRequest
+            @PathVariable int id
     ){
-        HttpSession session = httpServletRequest.getSession(false);
-
-        if(session == null || session.getAttribute("userId") == null) {
-            throw new UnauthenticatedException("로그인이 필요합니다.");
-        }
-        int userId = (int) session.getAttribute("userId");
-
-        commentService.deleteComment(id, userId);
+        commentService.deleteComment(id);
 
         return ResponseEntity.status(HttpStatus.NO_CONTENT).body(ApiResponse.ok());
     }
