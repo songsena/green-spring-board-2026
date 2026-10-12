@@ -32,14 +32,10 @@ public class UserController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<ApiResponse<Void>> login(@Valid @RequestBody LoginRequest loginRequest,
-                                      HttpServletRequest httpServletRequest) {
+    public ResponseEntity<ApiResponse<LoginResponse>> login(@Valid @RequestBody LoginRequest loginRequest) {
 
-        int userId = userService.login(loginRequest);
-        HttpSession session = httpServletRequest.getSession();
-        httpServletRequest.changeSessionId();
-        session.setAttribute("userId", userId);
-        return ResponseEntity.ok(ApiResponse.ok());
+        LoginResponse result = userService.login(loginRequest);
+        return ResponseEntity.ok(ApiResponse.ok(result));
     }
     // 내 정보 조회하기 기능
     @GetMapping("/me")
