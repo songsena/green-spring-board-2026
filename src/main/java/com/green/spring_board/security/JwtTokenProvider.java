@@ -19,8 +19,14 @@ public class JwtTokenProvider {
     // 액세스 토큰의 유효 기간 (밀리초)
     private static final long ACCESS_TOKEN_VALIDITY = 1000 * 60 * 60;
 
+    // TEST 용
+//    private static final long ACCESS_TOKEN_VALIDITY = 1000 * 60;
+
     // 리프레시 토큰의 유효 기간 (밀리초)
     private static final long REFRESH_TOKEN_VALIDITY = 1000 * 60 * 60 * 24 * 7;
+
+    // TEST 용
+//    private static final long REFRESH_TOKEN_VALIDITY = 1000 * 60;
 
     public JwtTokenProvider(@Value("${spring.jwt.secret}") String secretkey) {
         this.key = Keys.hmacShaKeyFor(secretkey.getBytes());
