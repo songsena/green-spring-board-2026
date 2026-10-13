@@ -84,6 +84,7 @@ public class GlobalExceptionHandler {
     // 이 외의 예외들을 모두 여기서 공통 처리 (500)
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ApiResponse<Void>> handleException(Exception e) {
+        log.error(e.getMessage(), e);
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                 .body(ApiResponse.fail("서버에서 오류가 발생했습니다."));
     }
