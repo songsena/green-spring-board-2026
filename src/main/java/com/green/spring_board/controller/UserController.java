@@ -2,6 +2,7 @@ package com.green.spring_board.controller;
 
 
 import com.green.spring_board.dto.*;
+import com.green.spring_board.entity.RefreshToken;
 import com.green.spring_board.exceptions.ResourceNotFoundException;
 import com.green.spring_board.exceptions.UnauthenticatedException;
 import com.green.spring_board.repository.UserRepository;
@@ -12,6 +13,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
+import lombok.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -44,6 +46,14 @@ public class UserController {
     @PostMapping("/logout")
     public ResponseEntity<ApiResponse<Void>> logout(){
         return ResponseEntity.ok(ApiResponse.ok());
+    }
+
+    @PostMapping("/refresh")
+    public ResponseEntity<ApiResponse<RefreshResponse>> refresh(@Valid @RequestBody RefreshRequest refreshRequest
+    ) {
+        // 리프레시 토큰을 이용해 새로운 액서스 토큰을 재발급 받는 API
+        RefreshResponse response = userService.refresh(refreshRequest);
+        return ResponseEntity.ok(ApiResponse.ok(response));
     }
 
     @GetMapping("/me")

@@ -50,8 +50,8 @@ public class SecurityConfig {
                                 .accessDeniedHandler(accessDeniedHandler)
                 )
                 .authorizeHttpRequests(auth -> auth
-                        // 로그인, 회원가입 허용
-                        .requestMatchers("/api/user/signup", "/api/user/login").permitAll()
+                        // 로그인 회원가입 토큰 재발급 허용
+                        .requestMatchers("/api/user/signup", "/api/user/login", "/api/user/refresh").permitAll()
                         // Swagger URL 허용
                         .requestMatchers("/swagger-ui/**", "/swagger-ui.html", "/v3/api-docs/**").permitAll()
                         .anyRequest().authenticated() // 나머지 모든 요청은 인증 필요
